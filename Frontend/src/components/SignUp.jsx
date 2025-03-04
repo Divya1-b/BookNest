@@ -1,14 +1,37 @@
 import React from 'react';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import {Link} from "react-router-dom";
+import {Link, Navigate, replace, useLocation, useNavigate} from "react-router-dom";
 import Login from './Login';
 const SignUp = () => {
+    const location=useLocation();
+    const navigate=useNavigate();
+    const from=location.state?.from?.pathname || "/";
     const {
             register,
             handleSubmit,
             formState:{errors},
         }=useForm();
-        const onSubmit=(data)=>console.log(data);
+        const onSubmit=async (data)=>{
+          const userInfo={
+              name:data.name,
+              email:data.email,
+              password:data.password,
+          }
+        await axios.post("http://localhost:4001/users/signup",userInfo)
+        .then((res)=>{
+          console.log(res.data);
+          if(res.data){
+            alert("Signup Successfully done");
+            navigate(from ,{replace:true});
+          }
+          localStorage.setItem("Users",JSON.stringify(res.data.user));
+        })
+        .catch((err)=>{
+          console.log(err);
+          alert("Error : "+err.response.data.message);
+        })
+        }
   return (
     <div className=' flex h-screen  items-center justify-center border shadow-md p-5'>
       
@@ -72,54 +95,4 @@ const SignUp = () => {
 }
 
 export default SignUp
-// import React from 'react';
-// import { Link } from "react-router-dom";
-// import Login from './Login';
 
-// const SignUp = () => {
-//   return (
-//     <div className="flex h-screen items-center justify-center border shadow-md p-5">
-//       <div className="p-5 bg-white rounded-md shadow-md w-96">
-//         <h3 className="font-bold text-lg text-center">Sign Up</h3>
-
-//         {/* Form Fields */}
-//         <div className="space-y-4 mt-4">
-//           <div className="font-normal space-y-2">
-//             <label className="block">Name</label>
-//             <input type="text" placeholder="Enter your Name" className="w-full border rounded-md p-2 dark:text-black" />
-//           </div>
-
-//           <div className="font-normal space-y-2">
-//             <label className="block">Email</label>
-//             <input type="email" placeholder="Enter your Email" className="w-full border rounded-md p-2 dark:text-black" />
-//           </div>
-
-//           <div className="font-normal space-y-2">
-//             <label className="block">Password</label>
-//             <input type="password" placeholder="Enter your Password" className="w-full border rounded-md p-2 dark:text-black" />
-//           </div>
-//         </div>
-
-//         {/* Buttons */}
-//         <div className="flex justify-around mt-4">
-//           <button className="btn btn-primary">Sign Up</button>
-          
-//           <p className="text-sm">
-//             Have an account?{" "}
-//             <button 
-//               className="underline text-blue-500"
-//               onClick={() => document.getElementById("my_modal_3").showModal()}
-//             >
-//               Login
-//             </button>
-//           </p>
-//         </div>
-//       </div>
-
-//       {/* Login Modal */}
-//       <Login />
-//     </div>
-//   );
-// };
-
-// export default SignUp;

@@ -16,7 +16,7 @@ export const Banner = () => {
   Email
   <input type="text" className="grow" placeholder="daisy@site.com" />
 </label>
-<button className='mt-x-3 btn btn-secondary'>Secondary</button>
+<button className='mt-x-3 btn btn-secondary'>Get Started</button>
   </div>
   </div>
   <div className=" w-full  md:w-1/2 order-2 md:order-1">
